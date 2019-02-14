@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.tea.core_feature"
       label="%featureName"
-      version="1.0.0.qualifier"
+      version="1.0.0"
       provider-name="%providerName">
 
    <description>
