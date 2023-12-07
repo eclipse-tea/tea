@@ -33,6 +33,7 @@ import org.apache.maven.wagon.ConnectionException;
 import org.apache.maven.wagon.StreamWagon;
 import org.apache.maven.wagon.Wagon;
 import org.apache.maven.wagon.providers.file.FileWagon;
+import org.apache.maven.wagon.providers.http.HttpWagon;
 import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
@@ -76,9 +77,6 @@ import org.eclipse.tea.library.build.util.FileUtils;
 import org.eclipse.tea.library.build.util.StringHelper;
 
 import com.google.common.base.Charsets;
-
-import io.takari.aether.wagon.OkHttpWagon;
-import io.takari.aether.wagon.OkHttpsWagon;
 
 @SuppressWarnings("restriction")
 public class SynchronizeMavenArtifact {
@@ -525,9 +523,9 @@ public class SynchronizeMavenArtifact {
 			case "file":
 				return new FileWagon();
 			case "http":
-				return new OkHttpWagon();
+				return new HttpWagon();
 			case "https":
-				return new OkHttpsWagon();
+				return new HttpWagon();
 			default:
 				return null;
 			}
