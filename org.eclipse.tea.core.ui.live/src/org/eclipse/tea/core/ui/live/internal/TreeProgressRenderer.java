@@ -25,9 +25,9 @@ public class TreeProgressRenderer extends OwnerDrawLabelProvider {
 	private final Color textColor;
 
 	public TreeProgressRenderer(Display display) {
-		gradColorTop = display.getSystemColor(SWT.COLOR_DARK_BLUE);
-		gradColorBottom = display.getSystemColor(SWT.COLOR_BLUE);
-		textColor = display.getSystemColor(SWT.COLOR_LIST_FOREGROUND);
+		gradColorBottom = display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT);
+		gradColorTop = display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND);
+		textColor = display.getSystemColor(SWT.COLOR_TITLE_FOREGROUND);
 	}
 
 	@Override
