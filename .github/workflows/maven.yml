@@ -110,6 +110,7 @@ jobs:
         diff ~/inspect-build ~/inspect-publish || :
         git status
         git branch --all
+        cat .git/config
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     # - name: Update dependency graph
