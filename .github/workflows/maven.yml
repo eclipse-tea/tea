@@ -38,7 +38,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: repository
-        path: sites/org.eclipse.tea.repository/target/repository
+        path: sites/org.eclipse.tea.repository/target/repository/*
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     # - name: Update dependency graph
