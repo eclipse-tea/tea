@@ -93,6 +93,8 @@ jobs:
         if [[ ${GITHUB_EVENT_NAME} == 'pull_request' ]]
         then
           git switch --orphan artifacts/${GITHUB_REF}
+          git config user.email 'michael.haubenwallner@ssi-schaefer.com'
+          git config user.name 'Github Actions by Michael Haubenwallner'
           mv sites/org.eclipse.tea.repository/target/repository .
           git add repository
           git commit -m"artifacts for ${GITHUB_REF}"
