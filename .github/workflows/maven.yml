@@ -37,8 +37,11 @@ jobs:
     - name: Upload P2 Update Site
       uses: actions/upload-artifact@v4
       with:
-        name: repository
-        path: sites/org.eclipse.tea.repository/target/repository/*
+        name: repository/p2.index
+        path: sites/org.eclipse.tea.repository/target/repository/p2.index
+      with:
+        name: repository/artifacts.xml.xz
+        path: sites/org.eclipse.tea.repository/target/repository/artifacts.xml.xz
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     # - name: Update dependency graph
