@@ -39,11 +39,16 @@ jobs:
       with:
         name: p2.index
         path: sites/org.eclipse.tea.repository/target/repository/p2.index
-    - name: Upload features/
+    - name: Upload artifacts.jar
       uses: actions/upload-artifact@v4
       with:
-        name: features/
-        path: sites/org.eclipse.tea.repository/target/repository/features/*
+        name: artifacts.jar
+        path: sites/org.eclipse.tea.repository/target/repository/artifacts.jar
+    - name: Upload artifacts.xml.xz
+      uses: actions/upload-artifact@v4
+      with:
+        name: artifacts.xml.xz
+        path: sites/org.eclipse.tea.repository/target/repository/artifacts.xml.xz
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     # - name: Update dependency graph
