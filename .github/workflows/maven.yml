@@ -34,14 +34,16 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
-    - name: Upload P2 Update Site
+    - name: Upload p2.index
       uses: actions/upload-artifact@v4
       with:
-        name: repository/p2.index
+        name: p2.index
         path: sites/org.eclipse.tea.repository/target/repository/p2.index
+    - name: Upload features/
+      uses: actions/upload-artifact@v4
       with:
-        name: repository/artifacts.xml.xz
-        path: sites/org.eclipse.tea.repository/target/repository/artifacts.xml.xz
+        name: features/
+        path: sites/org.eclipse.tea.repository/target/repository/features/*
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     # - name: Update dependency graph
