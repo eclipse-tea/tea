@@ -4,12 +4,9 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr:'5'))
         disableConcurrentBuilds(abortPrevious: true)
     }
-    agent {
-        label "centos-8-8gb"
-    }
     tools {
         maven 'apache-maven-latest'
-        jdk 'openjdk-jdk17-latest'
+        jdk 'temurin-jdk17-latest'
     }
     stages {
         stage('Build') {
