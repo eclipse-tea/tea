@@ -4,6 +4,9 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr:'5'))
         disableConcurrentBuilds(abortPrevious: true)
     }
+    agent {
+        label 'linux'
+    }
     tools {
         maven 'apache-maven-latest'
         jdk 'temurin-jdk17-latest'
