@@ -4,9 +4,7 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr:'5'))
         disableConcurrentBuilds(abortPrevious: true)
     }
-    agent {
-        label 'basic'
-    }
+    agent any
     tools {
         maven 'apache-maven-latest'
         jdk 'temurin-jdk17-latest'
@@ -15,12 +13,14 @@ pipeline {
         stage('Build') {
             steps {
                 sh """
+                set -xe
                 mvn clean verify
+                mv sites/org.eclipse.tea.repository/target/repository .
                 """
             }
             post {
                 success {
-                    archiveArtifacts artifacts: 'sites/org.eclipse.tea.repository/target/repository/'
+                    archiveArtifacts artifacts: 'repository/'
                 }
                 always {
                     recordIssues tool: mavenConsole()
