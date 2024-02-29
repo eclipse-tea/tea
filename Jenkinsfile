@@ -5,7 +5,7 @@ pipeline {
         disableConcurrentBuilds(abortPrevious: true)
     }
     agent {
-        label 'linux'
+        label 'basic'
     }
     tools {
         maven 'apache-maven-latest'
