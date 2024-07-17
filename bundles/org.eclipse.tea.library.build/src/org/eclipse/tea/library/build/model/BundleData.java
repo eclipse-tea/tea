@@ -26,10 +26,16 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.tea.library.build.internal.Activator;
 import org.osgi.framework.Version;
 
@@ -65,6 +71,8 @@ public abstract class BundleData {
 	 */
 	protected final ManifestHolder manifest;
 
+	protected final IResource bundleDirNew;
+
 	static final String[] EMPTY_STRINGS = {};
 
 	/**
@@ -73,7 +81,7 @@ public abstract class BundleData {
 	 * @param projectName
 	 *            external project name; only in use if we couldn't read the
 	 *            manifest
-	 * @param bundleDir
+	 * @param bundleDirNew
 	 *            the bundle directory; {@code null} for a JAR distribution
 	 * @param hasSource
 	 *            {@code true} for a source distribution; {@code false} for a
@@ -82,8 +90,9 @@ public abstract class BundleData {
 	 *            the JAR file; {@code null} for a source distribution or if the
 	 *            JAR is extracted
 	 */
-	protected BundleData(String projectName, File bundleDir, boolean hasSource, File jarFile) {
-		this.bundleDir = bundleDir;
+	protected BundleData(String projectName, IResource bundleDirNew, boolean hasSource, File jarFile) {
+		this.bundleDirNew = bundleDirNew;
+		this.bundleDir = bundleDirNew.getLocation().toFile();
 		this.hasSource = hasSource;
 		this.jarFile = jarFile;
 
@@ -91,12 +100,7 @@ public abstract class BundleData {
 		if (jarFile != null) {
 			manifest = readManifestFromJar(jarFile);
 		} else {
-			if (bundleDir.isDirectory()) {
-				manifest = readManifestFromDirectory(bundleDir);
-			} else {
-				// maybe the project is not installed
-				manifest = null;
-			}
+			manifest = readManifestFromDirectory(bundleDirNew);
 		}
 
 		// get the bundle name
@@ -207,26 +211,40 @@ public abstract class BundleData {
 
 	public static void copyManifestFromDirectory(File srcBundleDir, File destFile,
 			Map<String, String> additionalAttributes) throws IOException {
-		ManifestHolder mfh = readManifestFromDirectory(srcBundleDir);
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		IPath location = Path.fromOSString(srcBundleDir.getAbsolutePath());
+		ManifestHolder mfh = readManifestFromDirectory(root.findMember(location));
 		additionalAttributes.forEach((name, value) -> mfh.putSimple(name, value));
 		mfh.write(destFile);
 	}
 
-	protected static ManifestHolder readManifestFromDirectory(File bundleDir) {
-		File manifestFile = new File(bundleDir, "META-INF/MANIFEST.MF");
-		if (!manifestFile.isFile()) {
+	protected static ManifestHolder readManifestFromDirectory(IResource bundleDir) {
+		IFile manifestFile = null;
+
+		switch (bundleDir.getType()) {
+		case IResource.PROJECT:
+			IProject project = (IProject) bundleDir;
+			manifestFile = project.getFile(new Path("META-INF/MANIFEST.MF"));
+			break;
+		case IResource.FOLDER:
+			IFolder folder = (IFolder) bundleDir;
+			manifestFile = folder.getFile(new Path("META-INF/MANIFEST.MF"));
+			break;
+		default:
 			return null;
 		}
-		try {
-			FileInputStream fis = new FileInputStream(manifestFile);
-			try {
-				Manifest mf = new Manifest(fis);
-				return ManifestHolder.fromManifest(mf, manifestFile);
-			} finally {
-				fis.close();
-			}
-		} catch (Exception ex) {
-			throw new IllegalStateException("cannot read " + manifestFile, ex);
+
+		if (!manifestFile.exists()) {
+			return null;
+		}
+
+		File file = manifestFile.getLocation().toFile();
+
+		try (FileInputStream fis = new FileInputStream(file)) {
+			Manifest mf = new Manifest(fis);
+			return ManifestHolder.fromManifest(mf, file);
+		} catch (IOException ex) {
+			throw new IllegalStateException("cannot read " + file, ex);
 		}
 	}
 
@@ -244,22 +262,33 @@ public abstract class BundleData {
 		}
 	}
 
-	protected static Properties readBuildPropertiesFromDirectory(File bundleDir) {
-		File propFile = new File(bundleDir, "build.properties");
-		if (!propFile.isFile()) {
+	protected static Properties readBuildPropertiesFromDirectory(IResource bundleDir) {
+		IFile propFile = null;
+
+		switch (bundleDir.getType()) {
+		case IResource.PROJECT:
+			IProject project = (IProject) bundleDir;
+			propFile = project.getFile(new Path("build.properties"));
+			break;
+		case IResource.FOLDER:
+			IFolder folder = (IFolder) bundleDir;
+			propFile = folder.getFile(new Path("build.properties"));
+			break;
+		default:
 			return null;
 		}
-		try {
-			FileInputStream fis = new FileInputStream(propFile);
-			try {
-				Properties result = new Properties();
-				result.load(fis);
-				return result;
-			} finally {
-				fis.close();
-			}
-		} catch (Exception ex) {
-			throw new IllegalStateException("cannot read " + propFile, ex);
+
+		if (!propFile.exists()) {
+			return null;
+		}
+
+		File file = propFile.getLocation().toFile();
+		try (FileInputStream fis = new FileInputStream(file)) {
+			Properties result = new Properties();
+			result.load(fis);
+			return result;
+		} catch (IOException ex) {
+			throw new IllegalStateException("cannot read " + file, ex);
 		}
 	}
 

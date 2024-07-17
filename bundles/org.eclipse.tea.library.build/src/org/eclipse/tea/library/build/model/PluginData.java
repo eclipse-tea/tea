@@ -21,6 +21,11 @@ import java.util.Properties;
 import java.util.TreeMap;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.osgi.service.resolver.VersionRange;
 import org.eclipse.tea.library.build.util.StringHelper;
 import org.osgi.framework.Version;
@@ -62,7 +67,7 @@ public class PluginData extends BundleData {
 	 *            Eclipse project
 	 */
 	public PluginData(IProject project) {
-		this(project.getName(), project.getLocation().toFile(), true, null, project);
+		this(project.getName(), project.findMember(project.getProjectRelativePath()), true, null, project);
 	}
 
 	/**
@@ -80,12 +85,17 @@ public class PluginData extends BundleData {
 			throw new IllegalArgumentException("illegal JAR name: " + jarName);
 		}
 		if (binaryDistribution.isDirectory()) {
-			return new PluginData(null, binaryDistribution, false, null, null);
+
+			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+			IPath location = Path.fromOSString(binaryDistribution.getAbsolutePath());
+			IResource resource = root.findMember(location);
+
+			return new PluginData(null, resource, false, null, null);
 		}
 		throw new IllegalArgumentException(binaryDistribution.getPath());
 	}
 
-	protected PluginData(String projectName, File bundleDir, boolean hasSource, File jarFile, IProject project) {
+	protected PluginData(String projectName, IResource bundleDir, boolean hasSource, File jarFile, IProject project) {
 		super(projectName, bundleDir, hasSource, jarFile);
 
 		this.project = project;
@@ -393,6 +403,7 @@ public class PluginData extends BundleData {
 		return getSimpleManifestValue("Prefix-NativeCode");
 	}
 
+	@Override
 	public boolean isJarBundleShape() {
 		String x = getSimpleManifestValue("Eclipse-BundleShape");
 		return !"dir".equals(x); // "jar" or null
@@ -411,7 +422,7 @@ public class PluginData extends BundleData {
 		long timeStamp = getManifestFile().lastModified();
 
 		// re-read the manifest, manipulate and write the changes.
-		ManifestHolder temp = readManifestFromDirectory(bundleDir);
+		ManifestHolder temp = readManifestFromDirectory(bundleDirNew);
 		Map<String, String> updates = getExternalizeClasspath();
 		updates.putAll(getWamasExternalizeClasspath());
 

@@ -54,12 +54,32 @@ final class ManifestHolder {
 		this.referenceFile = referenceFile;
 	}
 
+	// private ManifestHolder(final Manifest manifest, final IFile
+	// referenceFile) {
+	// final Attributes attr = manifest.getMainAttributes();
+	// for (Object key : attr.keySet()) {
+	// final String name = key.toString();
+	// final String[] values = splitList(attr, name);
+	// attributes.put(name, new ManifestAttribute(name, values));
+	// }
+	//
+	// this.referenceFile = referenceFile.getLocation().toFile();
+	// }
+
 	static ManifestHolder fromManifest(Manifest manifest, File manifestFile) {
 		if (manifest == null) {
 			return null;
 		}
 		return new ManifestHolder(manifest, manifestFile);
 	}
+
+	// static ManifestHolder fromManifest(Manifest manifest, IFile manifestFile)
+	// {
+	// if (manifest == null) {
+	// return null;
+	// }
+	// return new ManifestHolder(manifest, manifestFile);
+	// }
 
 	/**
 	 * Returns the value list to which the specified key is mapped, or
