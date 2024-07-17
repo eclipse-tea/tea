@@ -27,6 +27,7 @@ import java.util.TreeMap;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.tea.library.build.internal.Activator;
 
@@ -54,7 +55,25 @@ final class ManifestHolder {
 		this.referenceFile = referenceFile;
 	}
 
+	private ManifestHolder(final Manifest manifest, final IFile referenceFile) {
+		final Attributes attr = manifest.getMainAttributes();
+		for (Object key : attr.keySet()) {
+			final String name = key.toString();
+			final String[] values = splitList(attr, name);
+			attributes.put(name, new ManifestAttribute(name, values));
+		}
+
+		this.referenceFile = referenceFile.getLocation().toFile();
+	}
+
 	static ManifestHolder fromManifest(Manifest manifest, File manifestFile) {
+		if (manifest == null) {
+			return null;
+		}
+		return new ManifestHolder(manifest, manifestFile);
+	}
+
+	static ManifestHolder fromManifest(Manifest manifest, IFile manifestFile) {
 		if (manifest == null) {
 			return null;
 		}
