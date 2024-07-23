@@ -64,7 +64,7 @@ public class FeatureData extends BundleData {
 	 * @param bvService
 	 */
 	public FeatureData(IProject project, TeaBuildVersionService bvService) {
-		super(project.getName(), project.getLocation().toFile(), true, null);
+		super(project.getName(), project.getLocation().toPath(), true, null);
 		this.project = project;
 		this.bvService = bvService;
 		this.document = readFeatureXml();

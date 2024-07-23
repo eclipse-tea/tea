@@ -11,9 +11,11 @@
 package org.eclipse.tea.library.build.model;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,6 +50,8 @@ public abstract class BundleData {
 	 */
 	protected final File bundleDir;
 
+	protected final Path bundleDirNew;
+
 	/**
 	 * {@code true} for a source distribution; {@code false} for a binary
 	 * distribution
@@ -73,7 +77,7 @@ public abstract class BundleData {
 	 * @param projectName
 	 *            external project name; only in use if we couldn't read the
 	 *            manifest
-	 * @param bundleDir
+	 * @param bundleDirNew
 	 *            the bundle directory; {@code null} for a JAR distribution
 	 * @param hasSource
 	 *            {@code true} for a source distribution; {@code false} for a
@@ -82,8 +86,9 @@ public abstract class BundleData {
 	 *            the JAR file; {@code null} for a source distribution or if the
 	 *            JAR is extracted
 	 */
-	protected BundleData(String projectName, File bundleDir, boolean hasSource, File jarFile) {
-		this.bundleDir = bundleDir;
+	protected BundleData(String projectName, Path bundleDirNew, boolean hasSource, File jarFile) {
+		this.bundleDir = bundleDirNew.toFile();
+		this.bundleDirNew = bundleDirNew;
 		this.hasSource = hasSource;
 		this.jarFile = jarFile;
 
@@ -91,8 +96,8 @@ public abstract class BundleData {
 		if (jarFile != null) {
 			manifest = readManifestFromJar(jarFile);
 		} else {
-			if (bundleDir.isDirectory()) {
-				manifest = readManifestFromDirectory(bundleDir);
+			if (Files.isDirectory(bundleDirNew)) {
+				manifest = readManifestFromDirectory(bundleDirNew);
 			} else {
 				// maybe the project is not installed
 				manifest = null;
@@ -207,24 +212,19 @@ public abstract class BundleData {
 
 	public static void copyManifestFromDirectory(File srcBundleDir, File destFile,
 			Map<String, String> additionalAttributes) throws IOException {
-		ManifestHolder mfh = readManifestFromDirectory(srcBundleDir);
+		ManifestHolder mfh = readManifestFromDirectory(srcBundleDir.toPath());
 		additionalAttributes.forEach((name, value) -> mfh.putSimple(name, value));
 		mfh.write(destFile);
 	}
 
-	protected static ManifestHolder readManifestFromDirectory(File bundleDir) {
-		File manifestFile = new File(bundleDir, "META-INF/MANIFEST.MF");
-		if (!manifestFile.isFile()) {
+	protected static ManifestHolder readManifestFromDirectory(Path bundleDir) {
+		Path manifestFile = bundleDir.resolve("META-INF/MANIFEST.MF");
+		if (!Files.isRegularFile(manifestFile)) {
 			return null;
 		}
-		try {
-			FileInputStream fis = new FileInputStream(manifestFile);
-			try {
-				Manifest mf = new Manifest(fis);
-				return ManifestHolder.fromManifest(mf, manifestFile);
-			} finally {
-				fis.close();
-			}
+		try (InputStream fis = Files.newInputStream(manifestFile, StandardOpenOption.READ)) {
+			Manifest mf = new Manifest(fis);
+			return ManifestHolder.fromManifest(mf, manifestFile.toFile());
 		} catch (Exception ex) {
 			throw new IllegalStateException("cannot read " + manifestFile, ex);
 		}
@@ -244,20 +244,16 @@ public abstract class BundleData {
 		}
 	}
 
-	protected static Properties readBuildPropertiesFromDirectory(File bundleDir) {
-		File propFile = new File(bundleDir, "build.properties");
-		if (!propFile.isFile()) {
+	protected static Properties readBuildPropertiesFromDirectory(Path bundleDir) {
+		Path propFile = bundleDir.resolve("build.properties");
+		if (!Files.isRegularFile(propFile)) {
 			return null;
 		}
-		try {
-			FileInputStream fis = new FileInputStream(propFile);
-			try {
-				Properties result = new Properties();
-				result.load(fis);
-				return result;
-			} finally {
-				fis.close();
-			}
+
+		try (InputStream fis = Files.newInputStream(propFile, StandardOpenOption.READ)) {
+			Properties result = new Properties();
+			result.load(fis);
+			return result;
 		} catch (Exception ex) {
 			throw new IllegalStateException("cannot read " + propFile, ex);
 		}
