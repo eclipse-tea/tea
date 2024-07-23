@@ -13,6 +13,7 @@ package org.eclipse.tea.library.build.model;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -62,7 +63,7 @@ public class PluginData extends BundleData {
 	 *            Eclipse project
 	 */
 	public PluginData(IProject project) {
-		this(project.getName(), project.getLocation().toFile(), true, null, project);
+		this(project.getName(), project.getLocation().toFile().toPath(), true, null, project);
 	}
 
 	/**
@@ -80,12 +81,13 @@ public class PluginData extends BundleData {
 			throw new IllegalArgumentException("illegal JAR name: " + jarName);
 		}
 		if (binaryDistribution.isDirectory()) {
-			return new PluginData(null, binaryDistribution, false, null, null);
+			Path path = binaryDistribution.toPath();
+			return new PluginData(null, path, false, null, null);
 		}
 		throw new IllegalArgumentException(binaryDistribution.getPath());
 	}
 
-	protected PluginData(String projectName, File bundleDir, boolean hasSource, File jarFile, IProject project) {
+	protected PluginData(String projectName, Path bundleDir, boolean hasSource, File jarFile, IProject project) {
 		super(projectName, bundleDir, hasSource, jarFile);
 
 		this.project = project;
@@ -393,6 +395,7 @@ public class PluginData extends BundleData {
 		return getSimpleManifestValue("Prefix-NativeCode");
 	}
 
+	@Override
 	public boolean isJarBundleShape() {
 		String x = getSimpleManifestValue("Eclipse-BundleShape");
 		return !"dir".equals(x); // "jar" or null
@@ -411,7 +414,7 @@ public class PluginData extends BundleData {
 		long timeStamp = getManifestFile().lastModified();
 
 		// re-read the manifest, manipulate and write the changes.
-		ManifestHolder temp = readManifestFromDirectory(bundleDir);
+		ManifestHolder temp = readManifestFromDirectory(bundleDir.toPath());
 		Map<String, String> updates = getExternalizeClasspath();
 		updates.putAll(getWamasExternalizeClasspath());
 
