@@ -115,7 +115,7 @@ public class TaskingLiveView implements Refreshable, EventHandler {
 		clear.setObject(new Object() {
 			@Execute
 			public void clear() {
-				nodes.clear();
+				nodes.removeIf(node -> node.isDone());
 				refresh();
 			}
 		});
