@@ -13,11 +13,13 @@ package org.eclipse.tea.library.build.tasks;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
@@ -54,6 +56,7 @@ public class TaskImportPreferences {
 			InputStream in = new FileInputStream(file.getAbsolutePath());
 			IPreferencesService preferencesService = Platform.getPreferencesService();
 			IExportedPreferences readPreferences = preferencesService.readPreferences(in);
+			readPreferences.accept(new PreferenceConvertionVisitor(log));
 
 			PreferenceVisitor visitor = new PreferenceVisitor();
 			readPreferences.accept(visitor);
@@ -83,6 +86,41 @@ public class TaskImportPreferences {
 		} catch (Exception e) {
 			log.error("Error importing preferences: " + file, e);
 		}
+	}
+
+	/**
+	 * Class for correcting UTF-8 character mismatches in read preference files,
+	 * as {@link Platform#getPreferencesService()} uses
+	 * {@link Properties#load(InputStream)} instead of
+	 * {@link Properties#load(java.io.Reader)}, which expects files to encoded
+	 * in "ISO-8859-1".
+	 */
+	private class PreferenceConvertionVisitor implements IPreferenceNodeVisitor {
+		private final TaskingLog log;
+
+		PreferenceConvertionVisitor(TaskingLog log) {
+			this.log = log;
+		}
+
+		@Override
+		public boolean visit(IEclipsePreferences node) throws BackingStoreException {
+			Charset preferenceCharset = Charset.forName("ISO-8859-1");
+			Charset charset = Charset.forName("UTF-8");
+			for (String key : node.keys()) {
+				String value = node.get(key, null);
+				if (value == null) {
+					continue;
+				}
+
+				String converted = new String(value.getBytes(preferenceCharset), charset);
+				if (!value.equals(converted)) {
+					log.debug("Value = " + value + "\n Converted =" + converted);
+					node.put(key, converted);
+				}
+			}
+			return true;
+		}
+
 	}
 
 	private class PreferenceVisitor implements IPreferenceNodeVisitor {
