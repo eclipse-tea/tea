@@ -1,15 +1,15 @@
-target "Eclipse 2022-12"
+target "Eclipse 2025-09"
 
-with source
+with source requirements
+environment JavaSE-21
 
-location "https://download.eclipse.org/releases/2022-12/" {
+location "https://download.eclipse.org/releases/2025-09/202509101001/" {
 	com.google.gson
-	com.google.guava [30,31)
+	com.google.guava [33,34)
 	com.google.inject
 
-	io.github.classgraph
-	javaewah
-	net.i2p.crypto.eddsa
+	io.github.classgraph.classgraph
+	com.googlecode.javaewah.JavaEWAH
 
 	org.aopalliance
 
@@ -47,20 +47,19 @@ location "https://download.eclipse.org/releases/2022-12/" {
 	org.sat4j.pb
 
 	slf4j.api
-	slf4j.nop
 }
 
-location "https://download.eclipse.org/ease/release/0.8.0/" {
+location "https://download.eclipse.org/ease/integration/nightly/" {
 	org.eclipse.ease.feature.feature.group
 	org.eclipse.ease.lang.python.feature.feature.group
 	org.eclipse.ease.ui.feature.feature.group
 	org.eclipse.ease.python.jython.feature.feature.group
 }
 
-location "https://download.eclipse.org/tracecompass.incubator/2021-06/master/rcp-repository" {
+location "https://download.eclipse.org/tracecompass.incubator/2024-12/master/rcp-repository" {
 	org.jython
 }
 
-location "https://github.com/ssi-schaefer/lcdsl/releases/download/0.5.0/" {
+location "https://github.com/ssi-schaefer/lcdsl/releases/download/1.0.0/" {
 	com.wamas.ide.launching.feature.feature.group
 }

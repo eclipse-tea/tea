@@ -10,7 +10,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: org.eclipse.tea.core,
  org.eclipse.e4.core.di,
  org.eclipse.e4.core.contexts,
- org.eclipse.osgi.services,
+ org.osgi.service.event,
  org.eclipse.tea.core.ui,
  org.eclipse.ease,
  org.eclipse.ui.workbench,
