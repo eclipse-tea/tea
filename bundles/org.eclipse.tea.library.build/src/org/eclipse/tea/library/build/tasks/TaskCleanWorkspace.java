@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.tea.core.services.TaskProgressTracker;
+import org.eclipse.tea.core.services.TaskProgressTracker.TaskProgressProvider;
 import org.eclipse.tea.library.build.model.WorkspaceData;
 
 /**
@@ -28,6 +29,11 @@ import org.eclipse.tea.library.build.model.WorkspaceData;
  */
 @Named("Clean and refresh all projects") // Progress Monitor shows & as _
 public class TaskCleanWorkspace {
+
+	@TaskProgressProvider
+	public int getWork() {
+		return ResourcesPlugin.getWorkspace().getRoot().getProjects().length;
+	}
 
 	@Execute
 	public void run(TaskProgressTracker tracker) throws Exception {
