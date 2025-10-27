@@ -102,6 +102,7 @@
           </execution>
           <execution>
             <id>feature-source</id>
+            <phase>none</phase>
             <goals>
               <goal>feature-source</goal>
             </goals>
