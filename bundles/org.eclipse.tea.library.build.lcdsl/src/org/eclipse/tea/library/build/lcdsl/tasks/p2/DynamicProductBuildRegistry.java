@@ -13,7 +13,7 @@ package org.eclipse.tea.library.build.lcdsl.tasks.p2;
 import java.io.File;
 import java.util.Properties;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.tea.core.TaskExecutionContext;

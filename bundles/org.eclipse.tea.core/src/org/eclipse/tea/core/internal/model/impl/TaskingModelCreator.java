@@ -13,7 +13,7 @@ package org.eclipse.tea.core.internal.model.impl;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.di.extensions.Service;

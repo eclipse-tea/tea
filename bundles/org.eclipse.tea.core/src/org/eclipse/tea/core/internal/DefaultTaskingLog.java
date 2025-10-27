@@ -12,7 +12,7 @@ package org.eclipse.tea.core.internal;
 
 import java.io.PrintStream;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.tea.core.TaskingInjectionHelper;

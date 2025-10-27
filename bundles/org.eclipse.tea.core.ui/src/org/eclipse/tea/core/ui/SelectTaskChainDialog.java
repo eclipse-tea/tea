@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.tea.core.ui;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
