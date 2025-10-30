@@ -6,21 +6,21 @@ Bundle-SymbolicName: org.eclipse.tea.core.ui.live;singleton:=true
 Bundle-Version: 4.0.0.qualifier
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.e4.ui.di,
- org.eclipse.swt,
- org.eclipse.ui,
- org.eclipse.ui.ide,
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.31.100",
+ org.eclipse.e4.ui.di;bundle-version="1.5.400",
+ org.eclipse.swt;bundle-version="3.127.0",
+ org.eclipse.ui;bundle-version="3.206.100",
+ org.eclipse.ui.ide;bundle-version="3.22.300",
  org.eclipse.tea.core,
  org.eclipse.tea.core.ui,
- org.eclipse.e4.core.contexts,
- org.eclipse.e4.core.di,
- org.eclipse.e4.core.services,
- org.osgi.service.event,
- org.eclipse.e4.ui.model.workbench,
- org.eclipse.e4.ui.services,
- com.google.guava,
- org.eclipse.core.resources
+ org.eclipse.e4.core.contexts;bundle-version="1.12.600",
+ org.eclipse.e4.core.di;bundle-version="1.9.500",
+ org.eclipse.e4.core.services;bundle-version="2.4.400",
+ org.osgi.service.event;bundle-version="1.4.1",
+ org.eclipse.e4.ui.model.workbench;bundle-version="2.4.300",
+ org.eclipse.e4.ui.services;bundle-version="1.6.300",
+ com.google.guava;bundle-version="33.3.0",
+ org.eclipse.core.resources;bundle-version="3.21.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Import-Package: jakarta.annotation;resolution:=optional,
   jakarta.inject
