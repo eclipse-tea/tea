@@ -12,8 +12,8 @@ package org.eclipse.tea.core.internal.model;
 
 import java.util.Arrays;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.tea.core.internal.model.iface.TaskingContainer;

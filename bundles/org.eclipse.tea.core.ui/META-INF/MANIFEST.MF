@@ -5,7 +5,7 @@ Bundle-Name: %pluginName
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-SymbolicName: org.eclipse.tea.core.ui;singleton:=true
-Bundle-Version: 3.1.0.qualifier
+Bundle-Version: 4.0.0.qualifier
 Bundle-Activator: org.eclipse.tea.core.ui.Activator
 Export-Package: org.eclipse.tea.core.ui;
   uses:="org.eclipse.tea.core,
@@ -37,27 +37,27 @@ Export-Package: org.eclipse.tea.core.ui;
    org.eclipse.tea.library.build",
  org.eclipse.tea.core.ui.internal.menu;x-internal:=true,
  org.eclipse.tea.core.ui.internal.run;x-internal:=true
-Require-Bundle: org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.31.100",
  org.eclipse.tea.core,
- org.osgi.service.event,
- com.google.guava,
- org.eclipse.ui,
- org.eclipse.ui.console,
- org.eclipse.e4.ui.model.workbench,
- org.eclipse.e4.ui.di,
- org.eclipse.e4.core.contexts,
- org.eclipse.e4.core.di,
- org.eclipse.e4.core.services,
- org.eclipse.core.resources;bundle-version="3.18.100",
- org.eclipse.ui.forms,
- org.eclipse.e4.ui.workbench,
- org.eclipse.emf.ecore,
- org.eclipse.e4.core.di.extensions
+ org.osgi.service.event;bundle-version="1.4.1",
+ com.google.guava;bundle-version="33.3.0",
+ org.eclipse.ui;bundle-version="3.206.100",
+ org.eclipse.ui.console;bundle-version="3.14.100",
+ org.eclipse.e4.ui.model.workbench;bundle-version="2.4.300",
+ org.eclipse.e4.ui.di;bundle-version="1.5.400",
+ org.eclipse.e4.core.contexts;bundle-version="1.12.600",
+ org.eclipse.e4.core.di;bundle-version="1.9.500",
+ org.eclipse.e4.core.services;bundle-version="2.4.400",
+ org.eclipse.core.resources;bundle-version="3.21.0",
+ org.eclipse.ui.forms;bundle-version="3.13.300",
+ org.eclipse.e4.ui.workbench;bundle-version="1.15.500",
+ org.eclipse.emf.ecore;bundle-version="2.37.0",
+ org.eclipse.e4.core.di.extensions;bundle-version="0.18.300"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
-Import-Package: javax.annotation,
+Import-Package: jakarta.annotation,
  org.eclipse.e4.ui.css.swt.theme,
- javax.inject;version="1.0.0"
+ jakarta.inject
 Service-Component: OSGI-INF/org.eclipse.tea.core.ui.DevelopmentMenuDecoration.xml,
  OSGI-INF/org.eclipse.tea.core.ui.TaskingConsole.xml,
  OSGI-INF/org.eclipse.tea.core.ui.config.TaskingConsoleConfig.xml,

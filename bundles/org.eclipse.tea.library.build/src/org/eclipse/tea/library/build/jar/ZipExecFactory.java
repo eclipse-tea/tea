@@ -12,7 +12,7 @@ package org.eclipse.tea.library.build.jar;
 
 import java.io.File;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.tea.core.services.TaskingLog;

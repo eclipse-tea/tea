@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.tea.core.internal.listeners;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.tea.core.TaskingInjectionHelper;

@@ -5,18 +5,18 @@ Bundle-Name: %pluginName
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-SymbolicName: org.eclipse.tea.ease;singleton:=true
-Bundle-Version: 3.1.0.qualifier
+Bundle-Version: 4.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: org.eclipse.tea.core,
- org.eclipse.e4.core.di,
- org.eclipse.e4.core.contexts,
- org.osgi.service.event,
+ org.eclipse.e4.core.di;bundle-version="1.9.500",
+ org.eclipse.e4.core.contexts;bundle-version="1.12.600",
+ org.osgi.service.event;bundle-version="1.4.1",
  org.eclipse.tea.core.ui,
- org.eclipse.ease,
- org.eclipse.ui.workbench,
- org.eclipse.ease.ui.scripts,
- org.eclipse.swt,
- com.google.guava
+ org.eclipse.ease;bundle-version="0.8.0",
+ org.eclipse.ui.workbench;bundle-version="3.133.0",
+ org.eclipse.ease.ui.scripts;bundle-version="0.8.0",
+ org.eclipse.swt;bundle-version="3.127.0",
+ com.google.guava;bundle-version="33.3.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.tea.ease
 Service-Component: OSGI-INF/org.eclipse.tea.ease.chains.TaskChainRunEaseScript.xml,

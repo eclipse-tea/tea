@@ -13,7 +13,7 @@ package org.eclipse.tea.core.internal.listeners;
 import java.text.NumberFormat;
 import java.util.List;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;

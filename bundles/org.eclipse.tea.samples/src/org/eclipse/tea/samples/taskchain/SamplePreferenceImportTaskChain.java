@@ -5,7 +5,7 @@ package org.eclipse.tea.samples.taskchain;
 
 import java.io.File;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.e4.core.contexts.IEclipseContext;

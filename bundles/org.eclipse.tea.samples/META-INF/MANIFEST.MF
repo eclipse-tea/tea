@@ -5,26 +5,26 @@ Bundle-Name: %pluginName
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-SymbolicName: org.eclipse.tea.samples
-Bundle-Version: 3.1.0.qualifier
+Bundle-Version: 4.0.0.qualifier
 Bundle-Activator: org.eclipse.tea.samples.Activator
-Require-Bundle: org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.31.100",
  org.eclipse.tea.core,
- org.eclipse.e4.core.di,
- org.eclipse.e4.core.contexts,
- org.osgi.service.event,
+ org.eclipse.e4.core.di;bundle-version="1.9.500",
+ org.eclipse.e4.core.contexts;bundle-version="1.12.600",
+ org.osgi.service.event;bundle-version="1.4.1",
  org.eclipse.tea.core.ui;resolution:=optional,
  org.eclipse.tea.ease;resolution:=optional,
- org.eclipse.e4.ui.workbench;resolution:=optional,
+ org.eclipse.e4.ui.workbench;bundle-version="1.15.500";resolution:=optional,
  org.eclipse.tea.library.build,
- org.eclipse.swt,
- org.eclipse.jface,
- org.eclipse.core.resources,
- org.eclipse.e4.core.services
+ org.eclipse.swt;bundle-version="3.127.0",
+ org.eclipse.jface;bundle-version="3.35.0",
+ org.eclipse.core.resources;bundle-version="3.21.0",
+ org.eclipse.e4.core.services;bundle-version="2.4.400"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.tea.samples.taskchain,
  org.eclipse.tea.samples.tasks
-Import-Package: javax.inject;version="1.0.0"
+Import-Package: jakarta.inject
 Service-Component: OSGI-INF/org.eclipse.tea.samples.config.SampleConfig.xml,
  OSGI-INF/org.eclipse.tea.samples.menu.SampleMenuDecoration.xml,
  OSGI-INF/org.eclipse.tea.samples.stat.SampleStatContribution.xml,

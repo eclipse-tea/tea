@@ -13,7 +13,7 @@ package org.eclipse.tea.core.ui.config;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
