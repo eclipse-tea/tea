@@ -63,9 +63,16 @@ public class ProductBuildTaskChain implements TaskChain {
 
 	private static final String DUMMY_SITE = "dummy-site";
 
+	private boolean zip = true;
+
 	protected List<AbstractProductBuild> builds = new ArrayList<>();
 
 	public ProductBuildTaskChain() {
+	}
+
+	public ProductBuildTaskChain withZip(boolean zip) {
+		this.zip = zip;
+		return this;
 	}
 
 	public ProductBuildTaskChain(AbstractProductBuild... build) {
@@ -118,7 +125,7 @@ public class ProductBuildTaskChain implements TaskChain {
 
 	private void addProductBuildTasks(TaskExecutionContext c, TaskingLog log, AbstractProductBuild productBuild) {
 		productBuild.addUpdateSiteTasks(c, new String[] { DUMMY_SITE });
-		productBuild.addProductTasks(c, DUMMY_SITE);
+		productBuild.addProductTasks(c, DUMMY_SITE, zip);
 	}
 
 	public static final class ProductSelectionDialog extends TitleAreaDialog {
