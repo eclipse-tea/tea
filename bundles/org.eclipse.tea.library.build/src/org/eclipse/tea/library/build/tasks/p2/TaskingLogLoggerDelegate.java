@@ -50,8 +50,13 @@ public class TaskingLogLoggerDelegate implements ILog {
 	}
 
 	@Override
-	public void log(String message) {
-		log.info(message);
+	public void printOut(String line) {
+		log.info(line);
+	}
+
+	@Override
+	public void printErr(String line) {
+		log.error(line);
 	}
 
 	@Override
