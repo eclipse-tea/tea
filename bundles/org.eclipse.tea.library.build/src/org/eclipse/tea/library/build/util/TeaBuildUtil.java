@@ -118,7 +118,7 @@ public class TeaBuildUtil {
 					break;
 				}
 
-				if (pass == 0 && status.getSeverity() > IStatus.WARNING) {
+				if (pass == 0) {
 					// In case of an error in pass 0, there is a probability for
 					// the errors to
 					// disappear by just triggering another full build (without
@@ -126,17 +126,25 @@ public class TeaBuildUtil {
 					// can be compiler confusion and dependencies between
 					// generated artifacts.
 
+					for (IStatus s : status.getChildren()) {
+						if (s.getSeverity() > IStatus.WARNING) {
+							log.debug(s.getMessage());
+						}
+					}
+
 					log.info(logTxt + ": fast recompile");
 
 					project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 					status = getStatus(element);
 
-					if (status.getSeverity() > IStatus.WARNING) {
-						for (IStatus s : status.getChildren()) {
-							if (s.getSeverity() > IStatus.WARNING) {
-								log.debug(s.getMessage());
-							}
-						}
+					if (status.getSeverity() <= IStatus.WARNING) {
+						break;
+					}
+				}
+
+				for (IStatus s : status.getChildren()) {
+					if (s.getSeverity() > IStatus.WARNING) {
+						log.info(s.getMessage());
 					}
 				}
 
