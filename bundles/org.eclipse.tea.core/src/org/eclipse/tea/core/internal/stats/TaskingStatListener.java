@@ -145,16 +145,25 @@ public class TaskingStatListener implements TaskingLifeCycleListener {
 		dto.loadavg = osb.getSystemLoadAverage();
 
 		// infos that are not on the public API
-		dto.totalMem = tryGet(osb, "getTotalPhysicalMemorySize", 0L);
-		dto.freeMem = tryGet(osb, "getFreePhysicalMemorySize", 0L);
+		dto.totalMem = tryGet(osb, "getTotalMemorySize", 0L);
+		dto.freeMem = tryGet(osb, "getFreeMemorySize", 0L);
 
 		dto.totalSwap = tryGet(osb, "getTotalSwapSpaceSize", 0L);
 		dto.freeSwap = tryGet(osb, "getFreeSwapSpaceSize", 0L);
 
 		dto.processLoad = tryGet(osb, "getProcessCpuLoad", 0.0d);
-		dto.systemLoad = tryGet(osb, "getSystemCpuLoad", 0.0d);
+		dto.systemLoad = tryGet(osb, "getCpuLoad", 0.0d);
 
 		dto.processCpuTime = tryGet(osb, "getProcessCpuTime", 0l);
+
+		try {
+			String javaVersion = System.getProperty("java.version");
+			if (javaVersion != null) {
+				dto.javaVersion = javaVersion;
+			}
+		} catch (SecurityException e) {
+
+		}
 		return dto;
 	}
 
@@ -227,6 +236,7 @@ public class TaskingStatListener implements TaskingLifeCycleListener {
 		public long totalMem = 0;
 		public double loadavg = 0;
 		public int processors = 0;
+		public String javaVersion = "<Unkown>";
 	}
 
 	@SuppressWarnings("unused")
