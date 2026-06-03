@@ -11,6 +11,8 @@
 package org.eclipse.tea.core.internal.stats;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.management.ManagementFactory;
@@ -19,12 +21,12 @@ import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
-import jakarta.inject.Named;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
@@ -42,6 +44,8 @@ import org.osgi.service.component.annotations.Component;
 
 import com.google.common.base.Strings;
 import com.google.gson.GsonBuilder;
+
+import jakarta.inject.Named;
 
 /**
  * Handles the actual posting of statistics to a remote server (if configured).
@@ -145,16 +149,25 @@ public class TaskingStatListener implements TaskingLifeCycleListener {
 		dto.loadavg = osb.getSystemLoadAverage();
 
 		// infos that are not on the public API
-		dto.totalMem = tryGet(osb, "getTotalPhysicalMemorySize", 0L);
-		dto.freeMem = tryGet(osb, "getFreePhysicalMemorySize", 0L);
+		dto.totalMem = tryGet(osb, "getTotalMemorySize", 0L);
+		dto.freeMem = tryGet(osb, "getFreeMemorySize", 0L);
 
 		dto.totalSwap = tryGet(osb, "getTotalSwapSpaceSize", 0L);
 		dto.freeSwap = tryGet(osb, "getFreeSwapSpaceSize", 0L);
 
 		dto.processLoad = tryGet(osb, "getProcessCpuLoad", 0.0d);
-		dto.systemLoad = tryGet(osb, "getSystemCpuLoad", 0.0d);
+		dto.systemLoad = tryGet(osb, "getCpuLoad", 0.0d);
 
 		dto.processCpuTime = tryGet(osb, "getProcessCpuTime", 0l);
+
+		try {
+			String javaVersion = System.getProperty("java.version");
+			if (javaVersion != null) {
+				dto.javaVersion = javaVersion;
+			}
+		} catch (SecurityException e) {
+
+		}
 		return dto;
 	}
 
@@ -227,6 +240,7 @@ public class TaskingStatListener implements TaskingLifeCycleListener {
 		public long totalMem = 0;
 		public double loadavg = 0;
 		public int processors = 0;
+		public String javaVersion = "<Unkown>";
 	}
 
 	@SuppressWarnings("unused")
