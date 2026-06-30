@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Supplier;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
@@ -148,35 +149,27 @@ public class TaskingStatListener implements TaskingLifeCycleListener {
 		dto.os = osb.getName() + ":" + osb.getArch() + ":" + osb.getVersion();
 		dto.loadavg = osb.getSystemLoadAverage();
 
-		// infos that are not on the public API
-		dto.totalMem = tryGet(osb, "getTotalMemorySize", 0L);
-		dto.freeMem = tryGet(osb, "getFreeMemorySize", 0L);
+		if (osb instanceof com.sun.management.OperatingSystemMXBean sunosb) {
+			// infos that are not on the public API
+			dto.totalMem = tryGet(() -> sunosb.getTotalMemorySize(), dto.totalMem);
+			dto.freeMem = tryGet(() -> sunosb.getFreeMemorySize(), dto.freeMem);
 
-		dto.totalSwap = tryGet(osb, "getTotalSwapSpaceSize", 0L);
-		dto.freeSwap = tryGet(osb, "getFreeSwapSpaceSize", 0L);
+			dto.totalSwap = tryGet(() -> sunosb.getTotalSwapSpaceSize(), dto.totalSwap);
+			dto.freeSwap = tryGet(() -> sunosb.getFreeSwapSpaceSize(), dto.freeSwap);
 
-		dto.processLoad = tryGet(osb, "getProcessCpuLoad", 0.0d);
-		dto.systemLoad = tryGet(osb, "getCpuLoad", 0.0d);
+			dto.processLoad = tryGet(() -> sunosb.getProcessCpuLoad(), dto.processLoad);
+			dto.systemLoad = tryGet(() -> sunosb.getCpuLoad(), dto.systemLoad);
 
-		dto.processCpuTime = tryGet(osb, "getProcessCpuTime", 0l);
-
-		try {
-			String javaVersion = System.getProperty("java.version");
-			if (javaVersion != null) {
-				dto.javaVersion = javaVersion;
-			}
-		} catch (SecurityException e) {
-
+			dto.processCpuTime = tryGet(() -> sunosb.getProcessCpuTime(), dto.processCpuTime);
 		}
+
+		dto.javaVersion = tryGet(() -> System.getProperty("java.version"), dto.javaVersion);
 		return dto;
 	}
 
-	@SuppressWarnings("unchecked")
-	private <T> T tryGet(Object o, String methodName, T defaultValue) {
+	private <T> T tryGet(Supplier<T> s, T defaultValue) {
 		try {
-			Method m = o.getClass().getDeclaredMethod(methodName);
-			m.setAccessible(true);
-			T rv = (T) m.invoke(o);
+			T rv = s.get();
 			if (rv == null) {
 				return defaultValue;
 			}
