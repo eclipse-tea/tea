@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Supplier;
 
 import javax.inject.Named;
 
@@ -144,26 +145,27 @@ public class TaskingStatListener implements TaskingLifeCycleListener {
 		dto.os = osb.getName() + ":" + osb.getArch() + ":" + osb.getVersion();
 		dto.loadavg = osb.getSystemLoadAverage();
 
-		// infos that are not on the public API
-		dto.totalMem = tryGet(osb, "getTotalPhysicalMemorySize", 0L);
-		dto.freeMem = tryGet(osb, "getFreePhysicalMemorySize", 0L);
+		if (osb instanceof com.sun.management.OperatingSystemMXBean sunosb) {
+			// infos that are not on the public API
+			dto.totalMem = tryGet(() -> sunosb.getTotalMemorySize(), dto.totalMem);
+			dto.freeMem = tryGet(() -> sunosb.getFreeMemorySize(), dto.freeMem);
 
-		dto.totalSwap = tryGet(osb, "getTotalSwapSpaceSize", 0L);
-		dto.freeSwap = tryGet(osb, "getFreeSwapSpaceSize", 0L);
+			dto.totalSwap = tryGet(() -> sunosb.getTotalSwapSpaceSize(), dto.totalSwap);
+			dto.freeSwap = tryGet(() -> sunosb.getFreeSwapSpaceSize(), dto.freeSwap);
 
-		dto.processLoad = tryGet(osb, "getProcessCpuLoad", 0.0d);
-		dto.systemLoad = tryGet(osb, "getSystemCpuLoad", 0.0d);
+			dto.processLoad = tryGet(() -> sunosb.getProcessCpuLoad(), dto.processLoad);
+			dto.systemLoad = tryGet(() -> sunosb.getCpuLoad(), dto.systemLoad);
 
-		dto.processCpuTime = tryGet(osb, "getProcessCpuTime", 0l);
+			dto.processCpuTime = tryGet(() -> sunosb.getProcessCpuTime(), dto.processCpuTime);
+		}
+
+		dto.javaVersion = tryGet(() -> System.getProperty("java.version"), dto.javaVersion);
 		return dto;
 	}
 
-	@SuppressWarnings("unchecked")
-	private <T> T tryGet(Object o, String methodName, T defaultValue) {
+	private <T> T tryGet(Supplier<T> s, T defaultValue) {
 		try {
-			Method m = o.getClass().getDeclaredMethod(methodName);
-			m.setAccessible(true);
-			T rv = (T) m.invoke(o);
+			T rv = s.get();
 			if (rv == null) {
 				return defaultValue;
 			}
@@ -227,6 +229,7 @@ public class TaskingStatListener implements TaskingLifeCycleListener {
 		public long totalMem = 0;
 		public double loadavg = 0;
 		public int processors = 0;
+		public String javaVersion = "<Unkown>";
 	}
 
 	@SuppressWarnings("unused")
