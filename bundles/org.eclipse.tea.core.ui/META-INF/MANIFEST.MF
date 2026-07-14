@@ -55,7 +55,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.e4.core.di.extensions
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
-Import-Package: javax.annotation,
+Import-Package: javax.annotation;version="1.3.5",
  org.eclipse.e4.ui.css.swt.theme,
  javax.inject;version="1.0.0"
 Service-Component: OSGI-INF/org.eclipse.tea.core.ui.DevelopmentMenuDecoration.xml,
