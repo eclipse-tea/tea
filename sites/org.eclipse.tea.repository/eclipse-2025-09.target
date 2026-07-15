@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Eclipse 2025-09" sequenceNumber="1757709335">
+<target name="Eclipse 2025-09" sequenceNumber="1784127276">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="com.google.gson" version="2.13.1"/>
@@ -45,7 +45,7 @@
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.ease.feature.feature.group" version="0.10.0.I202312181133"/>
       <unit id="org.eclipse.ease.lang.python.feature.feature.group" version="0.10.0.I202312050748"/>
-      <unit id="org.eclipse.ease.ui.feature.feature.group" version="0.10.0.I202509110322"/>
+      <unit id="org.eclipse.ease.ui.feature.feature.group" version="0.10.0.I202604140321"/>
       <unit id="org.eclipse.ease.python.jython.feature.feature.group" version="0.10.0.I202312050748"/>
       <repository location="https://download.eclipse.org/ease/integration/nightly/"/>
     </location>

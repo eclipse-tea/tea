@@ -1,9 +1,9 @@
-target "Eclipse 2026-03"
+target "Eclipse 2026-06"
 
 with source requirements
 environment JavaSE-21
 
-location "https://download.eclipse.org/releases/2026-03/202603111000/" {
+location "https://download.eclipse.org/releases/2026-06/202606101000/" {
 	com.google.gson
 	com.google.guava [33,34)
 	com.google.inject
@@ -13,7 +13,6 @@ location "https://download.eclipse.org/releases/2026-03/202603111000/" {
 
 	org.aopalliance
 
-	org.apache.commons.codec
 	org.apache.commons.commons-io
 	org.apache.httpcomponents.httpclient
 	org.apache.httpcomponents.httpcore
