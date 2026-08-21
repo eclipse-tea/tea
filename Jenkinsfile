@@ -14,20 +14,20 @@ pipeline {
             steps {
                 sh '''
                 set -xeu
-                withOfficialSuffix=
+                releaseQualifier=-Alpha
                 if [[ ${TAG_NAME-} == v* ]] \
                 && [[ ${JOB_NAME-} == "continuous/${TAG_NAME-}" ]] \
                 && [[ $(git rev-parse refs/tags/${TAG_NAME-}) == "$(git rev-parse HEAD)" ]] \
                 ; then
-                    withOfficialSuffix='-DunofficialSuffix='
+                    releaseQualifier='-Final'
                 elif [[ ${BRANCH_NAME-} == master ]] \
                 && [[ ${JOB_NAME-} == "continuous/${BRANCH_NAME-}" ]] \
                 && [[ $(git rev-parse refs/remotes/origin/${BRANCH_NAME-}) == "$(git rev-parse HEAD)" ]] \
                 ; then
-                    withOfficialSuffix='-DunofficialSuffix='
+                    releaseQualifier='-Beta'
                 fi
                 mvn -N -B generate-resources
-                mvn -B clean verify ${withOfficialSuffix}
+                mvn -B clean verify "-DreleaseQualifier=${releaseQualifier}"
                 ! test -r ./p2
                 mv sites/org.eclipse.tea.repository/target/repository p2
                 test -r ./p2/.

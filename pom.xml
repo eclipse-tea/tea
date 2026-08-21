@@ -54,7 +54,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <unofficialSuffix>'-UNOFFICIAL'</unofficialSuffix>
+    <releaseQualifier>-Alpha</releaseQualifier>
   </properties>
   
   <modules>
@@ -134,7 +134,7 @@
           <timestampProvider>jgit</timestampProvider>
           <jgit.ignore>pom.xml .gitignore .launchers/**</jgit.ignore>
           <jgit.dirtyWorkingTree>warning</jgit.dirtyWorkingTree>
-          <format>yyyyMMddHHmm${unofficialSuffix}</format>
+          <format>yyyyMMddHHmm'${releaseQualifier}'</format>
         </configuration>
         <executions>
           <execution>
