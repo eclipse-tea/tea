@@ -150,6 +150,7 @@
         <inherited>false</inherited>
         <executions>
           <execution>
+            <id>bootstrap-target-from-tpd</id>
             <goals>
               <goal>eclipse-run</goal>
             </goals>
