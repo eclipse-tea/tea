@@ -50,7 +50,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.eclipse</groupId>
   <artifactId>parent</artifactId>
-  <version>4.2.1-SNAPSHOT</version>
+  <version>5.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
@@ -115,7 +115,7 @@
         <version>${tycho-version}</version>
         <configuration>
           <target>
-            <file>../../sites/org.eclipse.tea.repository/eclipse-2024-09.target</file>
+            <file>../../sites/org.eclipse.tea.repository/eclipse-2026-06.target</file>
           </target>
         </configuration>
       </plugin>
@@ -150,6 +150,7 @@
         <inherited>false</inherited>
         <executions>
           <execution>
+            <id>bootstrap-target-from-tpd</id>
             <goals>
               <goal>eclipse-run</goal>
             </goals>
@@ -183,7 +184,7 @@
           <applicationArgs>
             <applicationArg>-application</applicationArg>
             <applicationArg>org.eclipse.cbi.targetplatform.tpd.converter</applicationArg>
-            <applicationArg>sites/org.eclipse.tea.repository/eclipse-2024-09.tpd</applicationArg>
+            <applicationArg>sites/org.eclipse.tea.repository/eclipse-2026-06.tpd</applicationArg>
           </applicationArgs>
         </configuration>
       </plugin>
