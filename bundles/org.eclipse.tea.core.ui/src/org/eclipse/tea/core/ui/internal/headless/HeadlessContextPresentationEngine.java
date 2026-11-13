@@ -17,11 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
-import jakarta.inject.Inject;
-
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
@@ -48,8 +45,13 @@ import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.inject.Inject;
 
 @SuppressWarnings("restriction")
 public class HeadlessContextPresentationEngine implements IPresentationEngine {
@@ -404,8 +406,15 @@ public class HeadlessContextPresentationEngine implements IPresentationEngine {
 		// event loop...
 		Display d = Display.getCurrent();
 		while (!stopped) {
-			if (!d.readAndDispatch()) {
-				d.sleep();
+			try {
+				if (!d.readAndDispatch()) {
+					d.sleep();
+				}
+			} catch (Exception e) {
+				// an uncaught exception would terminate the UI thread, and any
+				// later syncExec would block forever.
+				ILog.of(FrameworkUtil.getBundle(HeadlessContextPresentationEngine.class))
+						.error("Unhandled exception in event loop", e);
 			}
 		}
 

@@ -37,6 +37,8 @@ public class WorkbenchStarter implements TaskingHeadlessLifeCycle {
 
 	private static final String PRODUCT_ID = Activator.PLUGIN_ID + ".HeadlessTaskingEngine";
 
+	private volatile Thread workbenchThread;
+
 	@HeadlessStartup
 	public StartupAction startWorkbench(TaskingLog log) {
 		// check for the correct product being launched, and error out if
@@ -69,6 +71,7 @@ public class WorkbenchStarter implements TaskingHeadlessLifeCycle {
 			// endlessly.
 		});
 		workbench.setDaemon(true);
+		workbenchThread = workbench;
 		workbench.start();
 
 		while (!PlatformUI.isWorkbenchRunning()) {
@@ -103,6 +106,13 @@ public class WorkbenchStarter implements TaskingHeadlessLifeCycle {
 			// wait for a little time
 			log.debug("Waiting on Job '" + j.getName() + "'...");
 			j.join(10_000, new NullProgressMonitor());
+		}
+
+		// without the UI thread no one would process syncExec, blocking forever
+		Thread ui = workbenchThread;
+		if (ui == null || !ui.isAlive()) {
+			log.warn("Workbench UI thread is not running anymore, skipping workbench close.");
+			return;
 		}
 
 		Display.getDefault().syncExec(() -> PlatformUI.getWorkbench().close());
